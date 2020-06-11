@@ -35,15 +35,18 @@ void GetCpuName(LPWSTR cpuName)
 		
 		if (i == 0x80000002)
 		{
-			API(MSVCRT, memcpy)(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+			//API(MSVCRT, memcpy)(CPUBrandString, CPUInfo, sizeof(CPUInfo));
+			memcpy(CPUBrandString, CPUInfo, sizeof(CPUInfo));
 		}
 		else if (i == 0x80000003)
 		{
-			API(MSVCRT, memcpy)(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+			//API(MSVCRT, memcpy)(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
+			memcpy(CPUBrandString + 16, CPUInfo, sizeof(CPUInfo));
 		}
 		else if (i == 0x80000004)
 		{
-			API(MSVCRT, memcpy)(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+			//API(MSVCRT, memcpy)(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
+			memcpy(CPUBrandString + 32, CPUInfo, sizeof(CPUInfo));
 		}
 	}
 
