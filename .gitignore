@@ -1,0 +1,16 @@
+
+*.db
+*.db
+*.txt
+XSSBot/.vs/XSSBot/v14/.suo
+*.db
+*.obj
+*.tlog
+*.exp
+*.dll
+*.lib
+*.pch
+*.opendb
+*.idb
+*.exe
+*.ilk

