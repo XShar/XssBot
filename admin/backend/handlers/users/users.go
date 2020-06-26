@@ -5,7 +5,9 @@ import (
 	"net/http"
 
 	database "../../db"
+	obf "../gate/obf"
 	login "../login"
+
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-gonic/gin"
@@ -121,7 +123,7 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	// записываем в таблицу с юзерами
-	_, err = db.Exec("INSERT INTO `users` (`Username`, `PasswordHash`, `Token`) VALUES(?, ?, ?)", userForm.Form.Username, string(hash), 0)
+	_, err = db.Exec("INSERT INTO `users` (`Username`, `PasswordHash`, `Token`) VALUES(?, ?, ?)", userForm.Form.Username, string(hash), obf.GenRandStr(32))
 	if err != nil {
 		log.Println("users.CreateUser:", err)
 	}

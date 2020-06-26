@@ -1,12 +1,12 @@
 package modules
 
 import (
-	"io"
 	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
 	utils "../../utils"
@@ -72,27 +72,17 @@ func UploadModule(ctx *gin.Context) {
 		return
 	}
 
-	file, header, err := ctx.Request.FormFile("file")
+	file, err := ctx.FormFile("file")
 	if err != nil {
 		log.Println("modules.UploadModule:", err)
 		return
 	}
 
-	// создаём файл в папке с модулями
-	out, err := os.Create("./modules/" + header.Filename)
-	if err != nil {
+	filename := filepath.Base(file.Filename)
+	if err := ctx.SaveUploadedFile(file, filepath.Join("./modules/", filename)); err != nil {
 		log.Println("modules.UploadModule:", err)
+		return
 	}
-	defer out.Close()
-
-	// копируем туда содержимое отправленного файла
-	_, err = io.Copy(out, file)
-	if err != nil {
-		log.Println("modules.UploadModule:", err)
-	}
-
-	file.Close()
-	out.Close()
 
 	// шлём статус 200
 	ctx.Status(http.StatusOK)
@@ -115,7 +105,8 @@ func DelModule(ctx *gin.Context) {
 		return
 	}
 
-	path := "./modules/" + delForm.ModuleName
+	filename := filepath.Base(delForm.ModuleName)
+	path := filepath.Join("./modules/", filename)
 	_, err := os.Stat(path)
 	if !os.IsNotExist(err) {
 		err := os.Remove(path)
@@ -139,9 +130,8 @@ func GetModule(ctx *gin.Context) {
 		return
 	}
 
-	moduleName := data[0] // вытаскиваем название модуля
-
-	moduleData, err := ioutil.ReadFile("./modules/" + moduleName)
+	moduleName := filepath.Base(data[0])
+	moduleData, err := ioutil.ReadFile(filepath.Join("./modules/", moduleName))
 	if err != nil {
 		log.Println("modules.GetModule:", err)
 		// не удалось получить модуль - шлём пустой ответ, бот отправит ошибку
