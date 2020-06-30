@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Исходные файлы">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Файлы заголовков">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="DynImport">
+      <UniqueIdentifier>{90e17f88-ca7b-4f7a-943d-77f55b65933e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Install">
+      <UniqueIdentifier>{b1eaf212-27a0-4364-b716-2c84a2de917d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{a1f2132f-becc-4153-917b-f85123123db4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HTTP">
+      <UniqueIdentifier>{ec384aef-d1ae-4717-b3c9-e721a3d0ad1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BotWorks">
+      <UniqueIdentifier>{748c3296-23b4-4c28-8d34-d19c7f781cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="String">
+      <UniqueIdentifier>{f7f29ca4-966b-4000-babb-5d85c713a1ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TaskWorks">
+      <UniqueIdentifier>{ad750691-79c5-44b9-b414-cc05b1fb7b31}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="BotWorks\RegBot.cpp">
+      <Filter>BotWorks</Filter>
+    </ClCompile>
+    <ClCompile Include="BotWorks\Crypt.cpp">
+      <Filter>BotWorks</Filter>
+    </ClCompile>
+    <ClCompile Include="BotWorks\BotWorks.cpp">
+      <Filter>BotWorks</Filter>
+    </ClCompile>
+    <ClCompile Include="DynImport\Api.cpp">
+      <Filter>DynImport</Filter>
+    </ClCompile>
+    <ClCompile Include="HTTP\HTTP.cpp">
+      <Filter>HTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="Install\Install.cpp">
+      <Filter>Install</Filter>
+    </ClCompile>
+    <ClCompile Include="String\StringHelpers.cpp">
+      <Filter>String</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Utils.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskWorks\ModuleLoader.cpp">
+      <Filter>TaskWorks</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskWorks\TaskWorks.cpp">
+      <Filter>TaskWorks</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Config.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="BotWorks\Crypt.h">
+      <Filter>BotWorks</Filter>
+    </ClInclude>
+    <ClInclude Include="BotWorks\RegBot.h">
+      <Filter>BotWorks</Filter>
+    </ClInclude>
+    <ClInclude Include="DynImport\Api.h">
+      <Filter>DynImport</Filter>
+    </ClInclude>
+    <ClInclude Include="HTTP\HTTP.h">
+      <Filter>HTTP</Filter>
+    </ClInclude>
+    <ClInclude Include="Install\Install.h">
+      <Filter>Install</Filter>
+    </ClInclude>
+    <ClInclude Include="String\StringHelpers.h">
+      <Filter>String</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Debug_to_file.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\XorStr.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\MemLimits.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\Common.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\StaticData.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\ntddk.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="BotWorks\BotWorks.h">
+      <Filter>BotWorks</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskWorks\TaskWorks.h">
+      <Filter>TaskWorks</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
